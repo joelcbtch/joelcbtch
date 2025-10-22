@@ -50,7 +50,7 @@ export default defineConfig((/* ctx */) => {
 
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-       //publicPath: '/repo namn',
+      publicPath: '/MathiasCbtch.github.io',
       // analyze: true,
       // env: {},
       // rawDefine: {}
@@ -81,6 +81,12 @@ export default defineConfig((/* ctx */) => {
     devServer: {
       // https: true,
       open: true, // opens browser window automatically
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
