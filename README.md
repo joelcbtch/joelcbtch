@@ -1,41 +1,61 @@
 # cavatech (cavatech)
 
-hello world tutorial
+Backend tutorial
 
 ## Install the dependencies
 
 ```bash
-yarn
-# or
-npm install
+bun install
+```
+
+## Development
+
+### Run broker
+
+```bash
+bun run backend/broker.ts
+```
+
+### Backend (MQTT server + Express API)
+
+```bash
+bun run backend/server.ts
 ```
 
 ### Start the app in development mode (hot-code reloading, error reporting, etc.)
 
 ```bash
-quasar dev
+bun run dev
+```
+
+### Simulate sensor data
+
+Single value
+```bash
+bun run backend/publish.ts 23.5
+```
+
+Multiple values
+```bash
+bun run backend/publish.ts 10
 ```
 
 ### Lint the files
 
 ```bash
-yarn lint
-# or
-npm run lint
+bun run lint
 ```
 
 ### Format the files
 
 ```bash
-yarn format
-# or
-npm run format
+bun run format
 ```
 
 ### Build the app for production
 
 ```bash
-quasar build
+bun run build
 ```
 
 ### Customize the configuration
