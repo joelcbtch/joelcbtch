@@ -6,10 +6,22 @@ import express from 'express';
 import mqtt from 'mqtt';
 import cors from 'cors';
 import sqlite3 from 'sqlite3';
+import path from 'path';
 
 const app = express();
 app.use(cors());
-const db = new sqlite3.Database('backend/sensors.db');
+
+const dbPath = path.resolve('backend/sensors.db');
+console.log('DB path:', dbPath);
+const db = new sqlite3.Database(dbPath);
+
+db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='readings'", (err, row) => {
+  if (!row) {
+    console.error('readings table dows NOT exist!');
+  } else {
+    console.log('readings table exists.');
+  }
+});
 
 db.run(`
   CREATE TABLE IF NOT EXISTS readings (
@@ -107,19 +119,37 @@ let latest: { value: number; time: string } | null = null;
 // MQTT Setup and Handling
 // ==============================
 
-const client = mqtt.connect('mqtt://localhost:1883'); // update to our broker address
+const client = mqtt.connect('mqtt://localhost:1883', { clientId: 'server-client' }); // update to our broker address
 
 client.on('connect', () => {
-  client.subscribe('sensors/temp');
+  console.log('Server connected to broker');
+  client.subscribe('sensors/temp', (err) => {
+    if (err) {
+      console.error('SUbscription error:', err);
+    } else {
+      console.log('Subscribed to sensors/temp');
+    }
+  });
 });
 
 client.on('message', (topic, message) => {
+  console.log('Received MQTT message:', topic, message.toString());
   if (topic === 'sensors/temp') {
     const value = Number(message.toString());
     const time = new Date().toISOString();
     latest = { value, time };
 
     console.log('📡 Inserted reading:', value, time);
-    db.run('INSERT INTO readings (value, time) VALUES (?, ?)', [value, time]);
+    db.run(
+      'INSERT INTO readings (value, time) VALUES (?, ?)',
+      [value, time],
+      function (err) {
+        if (err) {
+          console.error('INSERT failed:', err.message);
+        } else {
+          console.log('INSERT OK (rowid):', this.lastID);
+        }
+      }
+    );
   }
 });
