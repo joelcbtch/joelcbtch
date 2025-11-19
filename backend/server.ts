@@ -33,6 +33,8 @@ db.run(`
 
 // ==============================
 // API Routes
+//
+// REST API: enables frontend to extract data from the database
 // ==============================
 
 app.get('/api/temp', (_, res) => {
@@ -53,6 +55,11 @@ app.get('/api/average-today', (_, res) => {
     },
   );
 });
+
+// Del 1
+//
+//
+// hint: read MAX value
 
 app.get('/api/stats-today', (_, res) => {
   const startOfDay = new Date();
@@ -76,7 +83,7 @@ app.get('/api/stats-today', (_, res) => {
 
 app.get('/api/history-30min', (_, res) => {
   const now = new Date();
-  const past30min = new Date(now.getTime() - 30 * 60 * 1000); // Subtract 30min directly
+  const past30min = new Date(now.getTime() - 30 * 60 * 1000);
 
   const isoStart = past30min.toISOString();
 
@@ -117,15 +124,26 @@ let latest: { value: number; time: string } | null = null;
 
 // ==============================
 // MQTT Setup and Handling
+//
+// Connect: Subscribe as listener to MQTT broker
+//          Listen for new data on topic sensors/temp
+//
+// Message: When broker has new data via sensors/temp -> catch it
+//          Format data
+//          Insert data into database
 // ==============================
 
-const client = mqtt.connect('mqtt://localhost:1883', { clientId: 'server-client' }); // update to our broker address
+// Del 2
+//
+//
+
+const client = mqtt.connect('mqtt://localhost:1883', { clientId: 'server-client' });
 
 client.on('connect', () => {
   console.log('Server connected to broker');
   client.subscribe('sensors/temp', (err) => {
     if (err) {
-      console.error('SUbscription error:', err);
+      console.error('Subscription error:', err);
     } else {
       console.log('Subscribed to sensors/temp');
     }
@@ -139,7 +157,7 @@ client.on('message', (topic, message) => {
     const time = new Date().toISOString();
     latest = { value, time };
 
-    console.log('📡 Inserted reading:', value, time);
+    console.log('Inserted reading:', value, time);
     db.run(
       'INSERT INTO readings (value, time) VALUES (?, ?)',
       [value, time],

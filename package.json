@@ -7,14 +7,17 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "bun run backend/server.ts",
+    "backend": "bun run backend/index.ts",
     "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
     "postinstall": "quasar prepare",
-    "deploy": "gh-pages --dist dist/spa"
+    "deploy": "gh-pages --dist dist/spa",
+    "load-history": "bun run backend/load-history.ts",
+    "db-check": "bun run backend/db-check.ts",
+    "publish": "bun run backend/publish.ts"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
