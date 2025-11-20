@@ -81,11 +81,11 @@ app.get('/api/stats-today', (_, res) => {
   );
 });
 
-app.get('/api/history-30min', (_, res) => {
+app.get('/api/history-24h', (_, res) => {
   const now = new Date();
-  const past30min = new Date(now.getTime() - 30 * 60 * 1000);
+  const past24h = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-  const isoStart = past30min.toISOString();
+  const isoStart = past24h.toISOString();
 
   db.all(
     `SELECT time, value
@@ -132,10 +132,6 @@ let latest: { value: number; time: string } | null = null;
 //          Format data
 //          Insert data into database
 // ==============================
-
-// Del 2
-//
-//
 
 const client = mqtt.connect('mqtt://localhost:1883', { clientId: 'server-client' });
 

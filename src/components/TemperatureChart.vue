@@ -40,9 +40,9 @@ const chartOptions = ref<ChartOptions<'line'>>({
     x: {
       type: 'time',
       time: {
-        unit: 'minute',
+        unit: 'hour',
         tooltipFormat: 'HH:mm',
-        displayFormats: { minute: 'HH:mm' },
+        displayFormats: { hour: 'HH:mm' },
       },
       title: { display: true, text: 'Time' },
     },
@@ -54,7 +54,7 @@ const chartOptions = ref<ChartOptions<'line'>>({
 });
 
 async function fetchHistory() {
-  const res = await fetch('/api/history-30min');
+  const res = await fetch('/api/history-24h');
   if (!res.ok) throw new Error('History fetch failed');
   readings.value = await res.json();
   updateChart();
