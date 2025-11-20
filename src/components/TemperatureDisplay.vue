@@ -14,7 +14,6 @@
     <section class="stats">
       <h5>{{ formattedDate }}</h5>
       <p>Min: {{ stats.min?.toFixed(1) ?? '-' }}°C</p>
-      <p>Max: {{ stats.max?.toFixed(1) ?? '-' }}°C</p>
       <p>Average: {{ stats.avg?.toFixed(1) ?? '-' }}°C</p>
     </section>
   </main>
@@ -64,7 +63,7 @@ async function fetchStats() {
 
     stats.value = {
       min: minmaxData.minTemp,
-      max: minmaxData.maxTemp,
+      max: minmaxData.maxTemperature,
       avg: avgData.average,
     };
   } catch (err) {

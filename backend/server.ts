@@ -56,11 +56,6 @@ app.get('/api/average-today', (_, res) => {
   );
 });
 
-// Del 1
-//
-//
-// hint: read MAX value
-
 app.get('/api/stats-today', (_, res) => {
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
@@ -69,12 +64,12 @@ app.get('/api/stats-today', (_, res) => {
   db.get(
     `SELECT
       MIN(value) as minTemp,
-      MAX(value) as maxTemp,
+      -- MAX(value) as maxTemp,
       COUNT(*) as count
      FROM readings
      WHERE time >= ?`,
     [isoStart],
-    (err, row: { minTemp: number; maxTemp: number; count: number } | undefined) => {
+    (err, row: { minTemp: number; count: number } | undefined) => {
       if (err) return res.status(500).json({ error: err.message });
       res.json(row ?? {});
     },
