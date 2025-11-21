@@ -1,3 +1,4 @@
+import mqtt from 'mqtt';
 import sqlite3 from 'sqlite3';
 
 const db = new sqlite3.Database('backend/sensors.db');
@@ -35,5 +36,13 @@ db.serialize(() => {
     stmt.finalize(() => {
         console.log(`Inserted ${entries.length} historical readings.`);
         db.close();
+
+        const client = mqtt.connect('mqtt://localhost:1883');
+
+        client.on('connect', () => {
+            client.publish('sensors/temp', '21.5', () => {
+                client.end();
+            });
+        });
     });
 });
