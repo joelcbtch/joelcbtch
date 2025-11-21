@@ -33,7 +33,7 @@ db.serialize(() => {
     });
 
     stmt.finalize(() => {
-        console.log('Inserted ${entries.length} historical readings.');
+        console.log(`Inserted ${entries.length} historical readings.`);
         db.close();
     });
 });
